@@ -1,0 +1,55 @@
+- name: get gfx infos
+  shell: "lspci | grep VGA"
+  register: gfxinfo
+
+- name: looking for nvidia drivers
+  shell: "apt list --installed"
+  register: nv_installed
+  ignore_errors: yes
+
+- name: update apt
+  apt:
+    update_cache: yes
+  when: gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver')
+
+- name: prepare expect script
+  copy:
+    src: install-nvidia-drivers.exp
+    dest: /run/install-nvidia-drivers.exp
+  when: gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver')
+
+- name: install nvidia dkms drivers
+  command: expect -d /run/install-nvidia-drivers.exp
+  when: gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver')
+
+- name: waiting to dpkg to finish
+  shell: while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done;
+  when: gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver')
+
+- name: remove nouveau driver
+  apt:
+    pkg:
+      - xserver-xorg-video-nouveau
+    state: absent
+  when: gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver')
+
+- name: remove unused packages
+  apt:
+    autoclean: yes
+  when: gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver')
+
+- name: reinstall required packages
+  apt:
+    pkg:
+      - libxatracker2
+      - libxvmc1
+      - xserver-xorg-video-amdgpu
+      - xserver-xorg-video-ati
+      - xserver-xorg-video-fbdev
+      - xserver-xorg-video-intel
+      - xserver-xorg-video-qxl
+      - xserver-xorg-video-radeon
+      - xserver-xorg-video-vesa
+    install_recommends: true
+  when: gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver')
+    

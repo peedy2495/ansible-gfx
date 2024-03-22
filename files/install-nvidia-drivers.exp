@@ -1,0 +1,19 @@
+#!/usr/bin/expect -f
+
+set timeout 600
+
+spawn apt install -y --install-recommends nvidia-driver-535
+
+expect "*Ubuntu*"
+sleep 1
+send -- "ImportMe\r"
+
+expect "*password*"
+sleep 1
+send -- "ImportMe\r"
+
+expect "*password*"
+sleep 1
+send -- "ImportMe\r"
+
+interact
