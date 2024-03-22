@@ -9,7 +9,7 @@
 
 - name: set install flag
   set_fact:
-    - install: true
+    install: true
   when: gfxinfo.stdout is search('Virtio') or (gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver'))
 
 - name: update apt
