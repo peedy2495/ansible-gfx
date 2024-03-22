@@ -5,38 +5,43 @@
 - name: looking for nvidia drivers
   shell: "apt list --installed"
   register: nv_installed
-  ignore_errors: yes
+  ignore_errors: true
+
+- name: set install flag
+  set_fact:
+    - install: true
+  when: gfxinfo.stdout is search('Virtio') or (gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver'))
 
 - name: update apt
   apt:
     update_cache: yes
-  when: gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver')
+  when: install
 
 - name: prepare expect script
   copy:
     src: install-nvidia-drivers.exp
     dest: /run/install-nvidia-drivers.exp
-  when: gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver')
+  when: install
 
 - name: install nvidia dkms drivers
   command: expect -d /run/install-nvidia-drivers.exp
-  when: gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver')
+  when: install
 
 - name: waiting to dpkg to finish
   shell: while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done;
-  when: gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver')
+  when: install
 
 - name: remove nouveau driver
   apt:
     pkg:
       - xserver-xorg-video-nouveau
     state: absent
-  when: gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver')
+  when: install
 
 - name: remove unused packages
   apt:
     autoclean: yes
-  when: gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver')
+  when: install
 
 - name: reinstall required packages
   apt:
@@ -51,5 +56,5 @@
       - xserver-xorg-video-radeon
       - xserver-xorg-video-vesa
     install_recommends: true
-  when: gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver')
+  when: install
     
