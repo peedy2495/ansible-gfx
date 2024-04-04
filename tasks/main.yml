@@ -16,11 +16,8 @@
   shell: "mokutil --sb-state"
   register: sb_state
   ignore_errors: true
-
-- name: set secure boot flag
   set_fact:
-    secure_boot: true
-  when: sb_state.stdout is search('SecureBoot enabled')
+    secure_boot: "{{ 'true' if 'SecureBoot enabled' in sb_state.stdout else 'false' }}"
 
 - name: update apt
   apt:
