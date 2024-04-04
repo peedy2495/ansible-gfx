@@ -34,7 +34,7 @@
 
 - name: install nvidia dkms drivers with enabled secure boot
   command: expect -d /run/install-nvidia-drivers.exp
-  when: install when secure_boot
+  when: install and secure_boot
 
 - name: install nvidia dkms drivers with disabled secure boot
   apt:
