@@ -12,6 +12,16 @@
     install: true
   when: gfxinfo.stdout is search('Virtio') or (gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver'))
 
+- name: looking for activated secure boot
+  shell: "mokutil --sb-state"
+  register: sb_state
+  ignore_errors: true
+
+- name: set secure boot flag
+  set_fact:
+    secure_boot: true
+  when: sb_state.stdout is search('SecureBoot enabled')
+
 - name: update apt
   apt:
     update_cache: yes
@@ -21,11 +31,19 @@
   copy:
     src: install-nvidia-drivers.exp
     dest: /run/install-nvidia-drivers.exp
-  when: install
+  when: install and secure_boot
 
-- name: install nvidia dkms drivers
+- name: install nvidia dkms drivers with enabled secure boot
   command: expect -d /run/install-nvidia-drivers.exp
-  when: install
+  when: install when secure_boot
+
+- name: install nvidia dkms drivers with disabled secure boot
+  apt:
+    pkg:
+      - nvidia-driver-535
+    install_recommends: yes
+    update_cache: no
+  when: install and not secure_boot
 
 - name: waiting to dpkg to finish
   shell: while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done;
