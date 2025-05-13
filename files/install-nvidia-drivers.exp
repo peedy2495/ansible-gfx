@@ -2,7 +2,7 @@
 
 set timeout 600
 
-spawn apt install -y --install-recommends nvidia-driver-535
+spawn apt install -y --install-recommends nvidia-driver-570
 
 expect "*Ubuntu*"
 sleep 1

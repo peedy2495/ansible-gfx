@@ -39,7 +39,7 @@
 - name: install nvidia dkms drivers with disabled secure boot
   apt:
     pkg:
-      - nvidia-driver-550
+      - nvidia-driver-570
     install_recommends: yes
     update_cache: no
   when: install and not secure_boot
