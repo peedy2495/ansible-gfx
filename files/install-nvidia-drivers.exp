@@ -4,9 +4,11 @@ set timeout 600
 
 spawn apt install -y --install-recommends nvidia-driver-570
 
-expect "*Ubuntu*"
+expect  "*<Ok>*"
 sleep 1
-send -- "ImportMe\r"
+send -- "\t"
+sleep 1
+send -- "\r"
 
 expect "*password*"
 sleep 1
