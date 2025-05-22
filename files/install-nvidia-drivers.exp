@@ -20,12 +20,12 @@ send -- "\r"
 
 # Response 1st input
 expect "*password*"
-sleep 1
+sleep 2
 send -- "ImportMe\r"
 
 # Response 2nd input
 expect "*password*"
-sleep 3
+sleep 2
 send -- "ImportMe\r"
 
 interact
