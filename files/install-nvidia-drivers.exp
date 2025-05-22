@@ -5,6 +5,14 @@ exp_internal 1
 log_user 1
 log_file -a /var/log/expect_nv.log
 
+proc slow_type {text} {
+    foreach c [split $text ""] {
+        send -- $c
+        sleep 0.1
+    }
+    send -- "\r"
+}
+
 spawn apt install -y --install-recommends nvidia-driver-570
 
 expect {
@@ -17,7 +25,7 @@ expect {
 expect {
     -re ".*Enter a password.*" {
         sleep 2
-        send -- "ImportMe\r"
+        slow_type "ImportMe"
     }
     timeout {
         puts "Timeout beim ersten Passwort"
@@ -28,7 +36,7 @@ expect {
 expect {
     -re ".*Enter the same password.*" {
         sleep 2
-        send -- "ImportMe\r"
+        slow_type "ImportMe"
     }
     timeout {
         puts "Timeout beim zweiten Passwort"
