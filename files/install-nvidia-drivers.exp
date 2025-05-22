@@ -18,7 +18,7 @@ expect "*password*"
 sleep 1
 send -- "\r"
 
-# Response 1std input
+# Response 1st input
 expect "*password*"
 sleep 1
 send -- "ImportMe\r"
