@@ -1,31 +1,39 @@
 #!/usr/bin/expect -f
 
 set timeout 600
+exp_internal 1
 log_user 1
 log_file -a /var/log/expect_nv.log
 
 spawn apt install -y --install-recommends nvidia-driver-570
 
-# Another verbosity on unintended installations
-#expect  "*<Ok>*"
-#sleep 1
-#send -- "\t"
-#sleep 1
-#send -- "\r"
+expect {
+    "*MOK*" {
+        sleep 1
+        send -- "\r"
+    }
+}
 
-# Catch the banner
-expect "*MOK*"
-sleep 1
-send -- "\r"
+expect {
+    -re ".*Enter a password.*" {
+        sleep 2
+        send -- "ImportMe\r"
+    }
+    timeout {
+        puts "Timeout beim ersten Passwort"
+        exit 1
+    }
+}
 
-# Response 1st input
-expect "*password*"
-sleep 2
-send -- "ImportMe\r"
-
-# Response 2nd input
-expect "*password*"
-sleep 2
-send -- "ImportMe\r"
+expect {
+    -re ".*Enter the same password.*" {
+        sleep 2
+        send -- "ImportMe\r"
+    }
+    timeout {
+        puts "Timeout beim zweiten Passwort"
+        exit 1
+    }
+}
 
 interact
