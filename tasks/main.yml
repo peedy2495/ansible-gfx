@@ -44,7 +44,7 @@
     update_cache: no
   when: install and not secure_boot
 
-- name: waiting to dpkg to finish
+- name: waiting for dpkg to finish
   shell: while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done;
   when: install
 

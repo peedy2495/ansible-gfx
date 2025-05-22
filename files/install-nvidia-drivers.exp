@@ -1,6 +1,8 @@
 #!/usr/bin/expect -f
 
 set timeout 600
+log_user 1
+log_file -a /var/log/expect_nv.log
 
 spawn apt install -y --install-recommends nvidia-driver-570
 
