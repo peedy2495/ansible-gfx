@@ -1,5 +1,6 @@
 #!/usr/bin/expect -f
 
+set password "ImportMe"
 set timeout 600
 exp_internal 1
 log_user 1
@@ -25,21 +26,28 @@ expect {
 expect {
     -re ".*Enter a password.*" {
         sleep 2
-        slow_type "ImportMe"
+        slow_type $password
     }
     timeout {
-        puts "Timeout beim ersten Passwort"
+        puts "Timeout during the first password prompt"
         exit 1
     }
 }
 
+# Wait until the first password input is echoed back
 expect {
-    -re ".*Enter the same password.*" {
+    -re ".*$password.*" {
+        sleep 1
+    }
+}
+
+expect {
+    -re ".*Enter the same password.*verify.*" {
         sleep 2
-        slow_type "ImportMe"
+        slow_type $password
     }
     timeout {
-        puts "Timeout beim zweiten Passwort"
+        puts "Timeout during the second password prompt"
         exit 1
     }
 }
