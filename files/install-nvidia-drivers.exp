@@ -34,13 +34,6 @@ expect {
     }
 }
 
-# Wait until the first password input is echoed back
-expect {
-    -re ".*$password.*" {
-        sleep 1
-    }
-}
-
 expect {
     -re ".*verify.*" {
         sleep 2
