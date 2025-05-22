@@ -6,11 +6,12 @@ log_file -a /var/log/expect_nv.log
 
 spawn apt install -y --install-recommends nvidia-driver-570
 
-expect  "*<Ok>*"
-sleep 1
-send -- "\t"
-sleep 1
-send -- "\r"
+# Another verbosity on unintended installations
+#expect  "*<Ok>*"
+#sleep 1
+#send -- "\t"
+#sleep 1
+#send -- "\r"
 
 expect "*password*"
 sleep 1
