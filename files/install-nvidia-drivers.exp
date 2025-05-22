@@ -13,10 +13,17 @@ spawn apt install -y --install-recommends nvidia-driver-570
 #sleep 1
 #send -- "\r"
 
+# Catch the banner
+expect "*password*"
+sleep 1
+send -- "\r"
+
+# Response 1std input
 expect "*password*"
 sleep 1
 send -- "ImportMe\r"
 
+# Response 2nd input
 expect "*password*"
 sleep 1
 send -- "ImportMe\r"
