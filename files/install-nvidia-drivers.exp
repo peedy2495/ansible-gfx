@@ -42,7 +42,7 @@ expect {
 }
 
 expect {
-    -re ".*Enter the same password.*verify.*" {
+    -re ".*verify.*" {
         sleep 2
         slow_type $password
     }
