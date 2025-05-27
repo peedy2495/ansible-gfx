@@ -7,19 +7,11 @@ log_user 1
 log_file -a /var/log/expect_nv.log
 
 proc slow_type {text} {
-    set first_char [string index $text 0]
-    set rest [string range $text 1 end]
 
-    # Type first char
-    send -- $first_char
-
-    # Auf erwartete Ausgabe nach dem ersten Zeichen warten
-    expect -exact "\033\[37m\033\[45m$first_char"
-
-    # Type the rest of the string
-    foreach c [split $rest ""] {
+    # Type the string veeeeerrryy slowly
+    foreach c [split $text ""] {
         send -- $c
-        sleep 0.1
+        sleep 0.5
     }
     send -- "\r"
 }
