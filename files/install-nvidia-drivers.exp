@@ -1,7 +1,7 @@
 #!/usr/bin/expect -f
 
 set password "ImportMe"
-set timeout 600
+set timeout 120
 exp_internal 1
 log_user 1
 log_file -a /var/log/expect_nv.log
@@ -18,17 +18,18 @@ proc slow_type {text} {
 }
 
 spawn apt install -y --install-recommends nvidia-driver-570
+# reenroll the MOK key with update-secureboot-policy --enroll-key
 
 expect {
-    "*MOK*" {
+    -re ".*Ok.*|.*ok.*|.*OK.*" {
         sleep 1
         send -- "\r"
     }
 }
 
 expect {
-    -re ".*Enter a password.*" {
-        sleep 2
+    -re ".*Ok.*|.*ok.*|.*OK.*" {
+        sleep 1
         slow_type $password
     }
     timeout {
@@ -38,8 +39,8 @@ expect {
 }
 
 expect {
-    -re ".*verify.*" {
-        sleep 2
+    -re ".*Ok.*|.*ok.*|.*OK.*" {
+        sleep 1
         slow_type $password
     }
     timeout {
