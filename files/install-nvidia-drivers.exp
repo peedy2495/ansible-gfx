@@ -10,7 +10,7 @@ proc slow_type {text} {
 
     # Type the string veeeeerrryy slowly
     foreach c [split $text ""] {
-        send -s -- $c
+        send -- $c
         flush stdout
         sleep 0.1
     }
