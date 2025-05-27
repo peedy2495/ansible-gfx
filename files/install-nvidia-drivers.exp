@@ -21,14 +21,14 @@ spawn apt install -y --install-recommends nvidia-driver-570
 # reenroll the MOK key with update-secureboot-policy --enroll-key
 
 expect {
-    -re ".*Ok.*" {
+    -re ".*Ubuntu.*" {
         sleep 1
         send -- "\r"
     }
 }
 
 expect {
-    -re ".*Ok.*" {
+    -re ".*Enter a password for Secure Boot.*" {
         sleep 1
         slow_type $password
     }
