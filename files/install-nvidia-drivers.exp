@@ -17,7 +17,9 @@ log_file -a /var/log/expect_nv.log
 #    send -- "\r"
 #}
 #
-#spawn apt install -y --install-recommends nvidia-driver-570
+
+spawn apt install -y --install-recommends nvidia-driver-570
+
 ## reenroll the MOK key with update-secureboot-policy --enroll-key
 #
 #expect {
