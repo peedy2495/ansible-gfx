@@ -6,61 +6,25 @@ exp_internal 1
 log_user 1
 log_file -a /var/log/expect_nv.log
 
-#proc slow_type {text} {
-#
-#    # Type the string veeeeerrryy slowly
-#    foreach c [split $text ""] {
-#        send -- $c
-#        flush stdout
-#        sleep 0.1
-#    }
-#    send -- "\r"
-#}
-#
+expect {
+    -re ".*Ubuntu.*" {
+        sleep 1
+        send -- "$password\r"
+    }
+}
 
-spawn apt install -y --install-recommends nvidia-driver-570
+expect {
+    -re ".*password.*" {
+        sleep 1
+        send -- "$password\r"
+    }
+}
 
-## reenroll the MOK key with update-secureboot-policy --enroll-key
-#
-#expect {
-#    -re ".*Ubuntu.*" {
-#        sleep 1
-#        send -- "\r"
-#    }
-#}
-#
-#expect {
-#    -re ".*Enter a password for Secure Boot.*" {
-#        sleep 1
-#        slow_type $password
-#    }
-#    timeout {
-#        puts "Timeout during the first password prompt"
-#        exit 1
-#    }
-#}
-#
-#expect {
-#    -re ".*Ok.*" {
-#        sleep 1
-#        slow_type $password
-#    }
-#    timeout {
-#        puts "Timeout during the second password prompt"
-#        exit 1
-#    }
-#}
-
-expect "*Ubuntu*"
-sleep 1
-send -- "ImportMe\r"
-
-expect "*password*"
-sleep 1
-send -- "ImportMe\r"
-
-expect "*password*"
-sleep 1
-send -- "ImportMe\r"
+expect {
+    -re ".*password.*" {
+        sleep 1
+        send -- "$password\r"
+    }
+}
 
 interact
