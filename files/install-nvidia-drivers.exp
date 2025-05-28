@@ -7,6 +7,7 @@ log_user 1
 log_file -a /var/log/expect_nv.log
 
 spawn apt install -y --install-recommends nvidia-driver-570
+# you're able to reenroll the MOK key with `update-secureboot-policy --enroll-key`
 
 expect {
     -re ".*Ubuntu.*" {
