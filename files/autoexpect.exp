@@ -304,8 +304,49 @@ Building initial module for 6.11.0-26-generic\r
 [K
 [K
 [K
-[K[1;1H[37mPackage configuration[17;2H[30m[47m┌───────────────────────────────────┤ [31mConfiguring Secure Boot[30m ├───────────────────────────────────┐[18;2H│                                                                                                 │[97m[40m [19;2H[30m[47m│ Your system has UEFI Secure Boot enabled.                                                       │[97m[40m [20;2H[30m[47m│                                                                                                 │[97m[40m [21;2H[30m[47m│ UEFI Secure Boot requires additional configuration to work with third-party drivers.            │[97m[40m [22;2H[30m[47m│                                                                                                 │[97m[40m [23;2H[30m[47m│ The system will assist you in configuring UEFI Secure Boot. To permit the use of third-party    │[97m[40m [24;2H[30m[47m│ drivers, a new Machine-Owner Key (MOK) has been generated. This key now needs to be enrolled    │[97m[40m [25;2H[30m[47m│ in your system's firmware.                                                                      │[97m[40m [26;2H[30m[47m│                                                                                                 │[97m[40m [27;2H[30m[47m│ To ensure that this change is being made by you as an authorized user, and not by an attacker,  │[97m[40m [28;2H[30m[47m│ you must choose a password now and then confirm the change after reboot using the same          │[97m[40m [29;2H[30m[47m│ password, in both the \"Enroll MOK\" and \"Change Secure Boot state\" menus that will be presented  │[97m[40m [30;2H[30m[47m│ to you when this system reboots.                                                                │[97m[40m [31;2H[30m[47m│                                                                                                 │[97m[40m [32;2H[30m[47m│ If you proceed but do not confirm the password upon reboot, Ubuntu will still be able to boot   │[97m[40m [33;2H[30m[47m│ on your system but any hardware that requires third-party drivers to work correctly may not be  │[97m[40m [34;2H[30m[47m│ usable.                                                                                         │[97m[40m [35;2H[30m[47m│                                                                                                 │[97m[40m [36;2H[30m[47m│                                             [37m[41m<Ok>[30m[47m                                                │[97m[40m [37;2H[30m[47m│                                                                                                 │[97m[40m [38;2H[30m[47m└─────────────────────────────────────────────────────────────────────────────────────────────────┘[97m[40m [39;3H                                                                                                   [36;49H"
+[K[1;1H[37mPackage configuration[17;2H[30m[47m┌───────────────────────────────────┤ [31mConfiguring Secure Boot[30m ├───────────────────────────────────┐[18;2H│
+                                                                                                 │
+[97m[40m [19;2H[30m[47m│
+ Your system has UEFI Secure Boot enabled.                                                       │
+[97m[40m [20;2H[30m[47m│
+                                                                                                 │
+[97m[40m [21;2H[30m[47m│
+ UEFI Secure Boot requires additional configuration to work with third-party drivers.            │
+[97m[40m [22;2H[30m[47m│
+                                                                                                 │
+[97m[40m [23;2H[30m[47m│
+ The system will assist you in configuring UEFI Secure Boot. To permit the use of third-party    │
+[97m[40m [24;2H[30m[47m│
+ drivers, a new Machine-Owner Key (MOK) has been generated. This key now needs to be enrolled    │
+[97m[40m [25;2H[30m[47m│
+ in your system's firmware.                                                                      │
+[97m[40m [26;2H[30m[47m│
+                                                                                                 │
+[97m[40m [27;2H[30m[47m│
+ To ensure that this change is being made by you as an authorized user, and not by an attacker,  │
+[97m[40m [28;2H[30m[47m│
+ you must choose a password now and then confirm the change after reboot using the same          │
+[97m[40m [29;2H[30m[47m│
+ password, in both the \"Enroll MOK\" and \"Change Secure Boot state\" menus that will be presented  │
+[97m[40m [30;2H[30m[47m│
+ to you when this system reboots.                                                                │
+[97m[40m [31;2H[30m[47m│
+                                                                                                 │
+[97m[40m [32;2H[30m[47m│
+ If you proceed but do not confirm the password upon reboot, /ntu will still be able to boot   │
+[97m[40m [33;2H[30m[47m│
+ on your system but any hardware that requires third-party drivers to work correctly may not be  │
+[97m[40m [34;2H[30m[47m│
+ usable.                                                                                         │
+[97m[40m [35;2H[30m[47m│
+                                                                                                 │
+[97m[40m [36;2H[30m[47m│
+                                             [37m[41m<Ok>[30m[47m                                                │
+[97m[40m [37;2H[30m[47m│
+                                                                                                 │
+[97m[40m [38;2H[30m[47m└─────────────────────────────────────────────────────────────────────────────────────────────────┘[97m[40m [39;3H                                                                                                   [36;49H"
 send -- "\r"
+
 expect -exact "[?12l[?25h[54;1H[37m[m[39;49m\r[K\r[?1049l[23;0;0t[?1049h[22;0;0t[1;54r[4l[?25l[m[37m[40m[1;54r[H[2J[1;1H[97m[45m[K
 [K
 [K
@@ -359,7 +400,23 @@ expect -exact "[?12l[?25h[54;1H[37m[m[39;49m\r[K\r[?1049l[23;0;0t[?1049h[22;0;0t
 [K
 [K
 [K
-[K[1;1H[?25l[?12l[?25h[37mPackage configuration[23;13H[30m[47m┌────────────────────────┤ [31mConfiguring Secure Boot[30m ├────────────────────────┐[24;13H│                                                                           │[97m[40m [25;13H[30m[47m│                                                                           │[97m[40m [26;13H[30m[47m│ Enter a password for Secure Boot. It will be asked again after a reboot.  │[97m[40m [27;13H[30m[47m│                                                                           │[97m[40m [28;13H[30m[47m│ [37m[45m_________________________________________________________________________[30m[47m │[97m[40m [29;13H[30m[47m│                                                                           │[97m[40m [30;13H[30m[47m│                    <Ok>                        <Cancel>                   │[97m[40m [31;13H[30m[47m│                                                                           │[97m[40m [32;13H[30m[47m└───────────────────────────────────────────────────────────────────────────┘[97m[40m [33;14H                                                                             [28;15H"
+[K[1;1H[?25l[?12l[?25h[37mPackage configuration[23;13H[30m[47m┌────────────────────────┤ [31mConfiguring Secure Boot[30m ├────────────────────────┐[24;13H│
+                                                                           │
+[97m[40m [25;13H[30m[47m│
+                                                                           │
+[97m[40m [26;13H[30m[47m│
+ Enter a password for Secure Boot. It will be asked again after a reboot.  │
+[97m[40m [27;13H[30m[47m│
+                                                                           │
+[97m[40m [28;13H[30m[47m│
+ [37m[45m_________________________________________________________________________[30m[47m │
+[97m[40m [29;13H[30m[47m│
+                                                                           │
+[97m[40m [30;13H[30m[47m│
+                    <Ok>                        <Cancel>                   │
+[97m[40m [31;13H[30m[47m│
+                                                                           │
+[97m[40m [32;13H[30m[47m└───────────────────────────────────────────────────────────────────────────┘[97m[40m [33;14H                                                                             [28;15H"
 send -- "I"
 expect -exact "[37m[45mI"
 send -- "mportMe\r"
@@ -416,7 +473,23 @@ expect -exact "[?25l[?12l[?25h[54;1H[40m[m[39;49m\r[K\r[?1049l[23;0;0t[?1049h[22
 [K
 [K
 [K
-[K[1;1H[?25l[?12l[?25h[37mPackage configuration[23;15H[30m[47m┌──────────────────────┤ [31mConfiguring Secure Boot[30m ├──────────────────────┐[24;15H│                                                                       │[97m[40m [25;15H[30m[47m│                                                                       │[97m[40m [26;15H[30m[47m│ Enter the same password again to verify you have typed it correctly.  │[97m[40m [27;15H[30m[47m│                                                                       │[97m[40m [28;15H[30m[47m│ [37m[45m_____________________________________________________________________[30m[47m │[97m[40m [29;15H[30m[47m│                                                                       │[97m[40m [30;15H[30m[47m│                  <Ok>                      <Cancel>                   │[97m[40m [31;15H[30m[47m│                                                                       │[97m[40m [32;15H[30m[47m└───────────────────────────────────────────────────────────────────────┘[97m[40m [33;16H                                                                         [28;17H"
+[K[1;1H[?25l[?12l[?25h[37mPackage configuration[23;15H[30m[47m┌──────────────────────┤ [31mConfiguring Secure Boot[30m ├──────────────────────┐[24;15H│
+                                                                       │
+[97m[40m [25;15H[30m[47m│
+                                                                       │
+[97m[40m [26;15H[30m[47m│
+ Enter the same password again to verify you have typed it correctly.  │
+[97m[40m [27;15H[30m[47m│
+                                                                       │
+[97m[40m [28;15H[30m[47m│
+ [37m[45m_____________________________________________________________________[30m[47m │
+[97m[40m [29;15H[30m[47m│
+                                                                       │
+[97m[40m [30;15H[30m[47m│
+                  <Ok>                      <Cancel>                   │
+[97m[40m [31;15H[30m[47m│
+                                                                       │
+[97m[40m [32;15H[30m[47m└───────────────────────────────────────────────────────────────────────┘[97m[40m [33;16H                                                                         [28;17H"
 send -- "I"
 expect -exact "[37m[45mI"
 send -- "mportMe\r"
