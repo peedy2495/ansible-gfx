@@ -1,45 +1,50 @@
-- name: get gfx infos
+- name: Get GPU information
   shell: "lspci | grep VGA"
   register: gfxinfo
 
-- name: looking for nvidia drivers
+- name: Check for installed NVIDIA drivers
   shell: "apt list --installed"
   register: nv_installed
   ignore_errors: true
 
-- name: set install flag
+- name: Set install flag
   set_fact:
     install: true
   when: gfxinfo.stdout is search('Virtio') or (gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver'))
 
-- name: looking for activated secure boot
+- name: Check if Secure Boot is enabled
   shell: "mokutil --sb-state"
   register: sb_state
   ignore_errors: true
 
-- name: set secure_boot flag
+- name: Set secure_boot flag
   set_fact:
     secure_boot: "{{ 'true' if 'SecureBoot enabled' in sb_state.stdout else 'false' }}"
 
-- name: update apt
+- name: Update apt cache
   apt:
     update_cache: yes
   when: install
 
-- name: prepare expect script
+- name: Copy expect script for NVIDIA driver installation
   copy:
     src: install-nvidia-drivers.exp
     dest: /run/install-nvidia-drivers.exp
   when: install and secure_boot
 
-- name: install nvidia dkms drivers with enabled secure boot
+- name: Install NVIDIA DKMS drivers with Secure Boot enabled
   command: expect -d /run/install-nvidia-drivers.exp
   when: install and secure_boot
 
-- name: install nvidia dkms drivers with disabled secure boot
+- name: Install NVIDIA DKMS drivers with Secure Boot disabled
   apt:
     pkg:
+      - linux-modules-nvidia-570-{{ ansible_kernel }}
+      - linux-modules-nvidia-570-generic-hwe-24.04
+      - linux-objects-nvidia-570-{{ ansible_kernel }}
+      - linux-signatures-nvidia-{{ ansible_kernel }}
       - nvidia-driver-570
+      - nvidia-kernel-source-570
     install_recommends: yes
     update_cache: no
   when: install and not secure_boot
@@ -48,19 +53,41 @@
   shell: while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done;
   when: install
 
-- name: remove nouveau driver
+- name: configure power management for nvidia
+  copy:
+    dest: /etc/default/grub.d/nvidia-power.cfg
+    content: 'GRUB_CMDLINE_LINUX_DEFAULT="$GRUB_CMDLINE_LINUX_DEFAULT quiet splash pcie_aspm=off usbcore.autosuspend=-1"'
+    owner: root
+    group: root
+    mode: '0644'
+  when: install
+
+- name: update grub
+  command: update-grub
+  when: install
+
+- name: install nvidia cuda development and toolkit
+  apt:
+    pkg:
+      - nvidia-cuda-dev
+      - nvidia-cuda-toolkit
+    install_recommends: yes
+    update_cache: no
+  when: install
+
+- name: Remove Nouveau driver
   apt:
     pkg:
       - xserver-xorg-video-nouveau
     state: absent
   when: install
 
-- name: remove unused packages
+- name: Remove unused packages
   apt:
     autoclean: yes
   when: install
 
-- name: reinstall required packages
+- name: Reinstall required Xorg video packages
   apt:
     pkg:
       - libxatracker2
