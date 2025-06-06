@@ -44,6 +44,10 @@
     update_cache: no
   when: install and not secure_boot
 
+- name: waiting for dpkg to finish
+  shell: while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done;
+  when: install
+
 - name: Install NVIDIA kernel items
   apt:
     pkg:
@@ -54,10 +58,6 @@
       - nvidia-kernel-source-570
     install_recommends: yes
     update_cache: no
-  when: install
-
-- name: waiting for dpkg to finish
-  shell: while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done;
   when: install
 
 - name: configure power management for nvidia
