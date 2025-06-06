@@ -3,11 +3,12 @@
 set password "ImportMe"
 set timeout 300
 set ver "570"
+set kernelversion [exec uname -r]
 exp_internal 1
 log_user 1
 log_file -a /var/log/expect_nv.log
 
-spawn apt install -y --install-recommends linux-modules-nvidia-$ver-$(uname-r) linux-modules-nvidia-$ver-generic-hwe-24.04 linux-objects-nvidia-$ver-$(uname-r) linux-signatures-nvidia-$(uname-r) nvidia-driver-$ver nvidia-kernel-source-$ver
+spawn apt install -y --install-recommends linux-modules-nvidia-$ver-$kernelversion linux-modules-nvidia-$ver-generic-hwe-24.04 linux-objects-nvidia-$ver-$(uname-r) linux-signatures-nvidia-$(uname-r) nvidia-driver-$ver nvidia-kernel-source-$ver
 # Got stuck? You're able to reenroll the MOK key with `update-secureboot-policy --enroll-key`
 
 expect {
