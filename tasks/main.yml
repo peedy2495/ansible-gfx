@@ -39,15 +39,22 @@
 - name: Install NVIDIA DKMS drivers with Secure Boot disabled
   apt:
     pkg:
+      - nvidia-driver-570
+    install_recommends: yes
+    update_cache: no
+  when: install and not secure_boot
+
+- name: Install NVIDIA kernel items
+  apt:
+    pkg:
       - linux-modules-nvidia-570-{{ ansible_kernel }}
       - linux-modules-nvidia-570-generic-hwe-24.04
       - linux-objects-nvidia-570-{{ ansible_kernel }}
       - linux-signatures-nvidia-{{ ansible_kernel }}
-      - nvidia-driver-570
       - nvidia-kernel-source-570
     install_recommends: yes
     update_cache: no
-  when: install and not secure_boot
+  when: install
 
 - name: waiting for dpkg to finish
   shell: while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done;
