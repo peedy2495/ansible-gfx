@@ -10,7 +10,7 @@
 - name: Set install flag
   set_fact:
     install: true
-  #when: gfxinfo.stdout is search('Virtio') or (gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver'))
+  when: gfxinfo.stdout is search('Virtio') or (gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver'))
 
 - name: Check if Secure Boot is enabled
   shell: "mokutil --sb-state"
@@ -68,6 +68,10 @@
     group: root
     mode: '0644'
   when: install
+
+- name: Set install flag
+  set_fact:
+    install: true
 
 - name: Remove "--no-persistence-mode" from nvidia-persistenced service
   replace:
