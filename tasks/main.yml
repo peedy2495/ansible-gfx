@@ -69,10 +69,6 @@
     mode: '0644'
   when: install
 
-- name: Set install flag
-  set_fact:
-    install: true
-
 - name: Remove "--no-persistence-mode" from nvidia-persistenced service
   replace:
     path: /usr/lib/systemd/system/nvidia-persistenced.service
@@ -82,6 +78,10 @@
 
 - name: update grub
   command: update-grub
+  when: install
+
+- name: set nvidia prime profile to nvidia
+  command: prime-select nvidia
   when: install
 
 - name: install nvidia cuda development and toolkit
