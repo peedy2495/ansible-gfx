@@ -67,6 +67,7 @@
     path: /etc/systemd/system/nvidia-persistenced.service
     regexp: ' --no-persistence-mode'
     replace: ''
+  when: install
 
 - name: update grub
   command: update-grub
