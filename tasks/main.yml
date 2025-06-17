@@ -73,6 +73,8 @@
     path: /usr/lib/systemd/system/nvidia-persistenced.service
     regexp: ' --no-persistence-mode'
     replace: ''
+  tags:
+    - wip
 
 - name: update grub
   command: update-grub
