@@ -1,1 +1,2 @@
 install: false
+nvidia_driver_version: "570"
