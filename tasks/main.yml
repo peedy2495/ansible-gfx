@@ -1,48 +1,40 @@
 - name: Get GPU information
   shell: "lspci | grep VGA"
   register: gfxinfo
-  tags: gfx
 
 - name: Check for installed NVIDIA drivers
   shell: "apt list --installed"
   register: nv_installed
   ignore_errors: true
-  tags: gfx
 
 - name: Set install flag
   set_fact:
     install: true
   when: gfxinfo.stdout is search('Virtio') or (gfxinfo.stdout is search('NVIDIA') and nv_installed.stdout is not search('nvidia-driver'))
-  tags: gfx
 
 - name: Check if Secure Boot is enabled
   shell: "mokutil --sb-state"
   register: sb_state
   ignore_errors: true
-  tags: gfx
 
 - name: Set secure_boot flag
   set_fact:
     secure_boot: "{{ 'true' if 'SecureBoot enabled' in sb_state.stdout else 'false' }}"
-  tags: gfx
 
 - name: Update apt cache
   apt:
     update_cache: yes
   when: install
-  tags: gfx
 
 - name: Copy expect script for NVIDIA driver installation
   copy:
     src: install-nvidia-drivers.exp
     dest: /run/install-nvidia-drivers.exp
   when: install and secure_boot
-  tags: gfx
 
 - name: Install NVIDIA DKMS drivers with Secure Boot enabled
   command: expect -d /run/install-nvidia-drivers.exp
   when: install and secure_boot
-  tags: gfx
 
 - name: Install NVIDIA DKMS drivers with Secure Boot disabled
   apt:
@@ -51,12 +43,10 @@
     install_recommends: yes
     update_cache: no
   when: install and not secure_boot
-  tags: gfx
 
 - name: waiting for dpkg to finish
   shell: while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done;
   when: install
-  tags: gfx
 
 - name: Install NVIDIA kernel items
   apt:
@@ -69,7 +59,6 @@
     install_recommends: yes
     update_cache: no
   when: install
-  tags: gfx
 
 - name: configure power management for nvidia
   copy:
@@ -79,7 +68,6 @@
     group: root
     mode: '0644'
   when: install
-  tags: gfx
 
 - name: Remove "--no-persistence-mode" from nvidia-persistenced service
   replace:
@@ -87,17 +75,15 @@
     regexp: ' --no-persistence-mode'
     replace: ''
   when: install
-  tags: gfx
+  tags: wip
 
 - name: update grub
   command: update-grub
   when: install
-  tags: gfx
 
 - name: set nvidia prime profile to nvidia
   command: prime-select nvidia
   when: install
-  tags: gfx
 
 - name: install nvidia cuda development and toolkit
   apt:
@@ -107,7 +93,6 @@
     install_recommends: yes
     update_cache: no
   when: install
-  tags: gfx
 
 - name: Remove Nouveau driver
   apt:
@@ -115,13 +100,11 @@
       - xserver-xorg-video-nouveau
     state: absent
   when: install
-  tags: gfx
 
 - name: Remove unused packages
   apt:
     autoclean: yes
   when: install
-  tags: gfx
 
 - name: Reinstall required Xorg video packages
   apt:
@@ -137,4 +120,4 @@
       - xserver-xorg-video-vesa
     install_recommends: true
   when: install
-  tags: gfx
+    
