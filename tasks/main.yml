@@ -67,14 +67,14 @@
     owner: root
     group: root
     mode: '0644'
+  when: install
 
 - name: Remove "--no-persistence-mode" from nvidia-persistenced service
   replace:
     path: /usr/lib/systemd/system/nvidia-persistenced.service
     regexp: ' --no-persistence-mode'
     replace: ''
-  tags:
-    - wip
+  when: install
 
 - name: update grub
   command: update-grub
