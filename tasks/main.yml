@@ -81,6 +81,7 @@
 
 - name: set nvidia prime profile to nvidia
   command: prime-select nvidia
+  when: install
 
 - name: install nvidia cuda development and toolkit
   apt:
