@@ -1,2 +1,3 @@
 install: false
-nvidia_driver_version: "570"
+nvidia_driver_version: "535"
+# latest used version: 570
