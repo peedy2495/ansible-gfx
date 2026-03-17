@@ -1,3 +1,4 @@
 install: true
 nvidia_driver_version: "535"
+nvidia_version_since: "535"
 # latest used version: 570

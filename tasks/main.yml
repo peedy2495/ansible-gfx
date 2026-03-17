@@ -60,16 +60,16 @@
     update_cache: no
   when: install
 
-- name: Pull all nvidia package for caching version >=535
+- name: Pull all nvidia packages for caching since configured version
   block:
-    - name: NVIDIA-Packagelist - get >= 535
+    - name: NVIDIA-Packagelist - get packages since configured version
       ansible.builtin.shell: |
         set -o pipefail
         apt-cache pkgnames | \
         grep -E '^(nvidia-|libnvidia-|linux-modules-nvidia-|linux-objects-nvidia-|linux-signatures-nvidia-|xserver-xorg-video-)' | \
-        awk -F- '
+        awk -F- -v version_since="{{ nvidia_version_since }}" '
         /^linux-(modules|objects)-nvidia-/ {
-          if ($4 !~ /^[0-9]+$/ || $4 < 535) next
+          if ($4 !~ /^[0-9]+$/ || $4 < version_since) next
           if ($0 ~ /-(generic|generic-64k)$/ || $0 ~ /-(generic-hwe-[0-9]+\.[0-9]+)$/) print
           next
         }
@@ -80,7 +80,7 @@
         }
 
         {
-          if ($NF ~ /^[0-9]+$/ && $NF >= 535) print
+          if ($NF ~ /^[0-9]+$/ && $NF >= version_since) print
         }'
       args:
         executable: /bin/bash
@@ -89,14 +89,14 @@
 
     - name: NVIDIA-Packagelist - set variable
       ansible.builtin.set_fact:
-        nvidia_pkgs_gteq535: "{{ nvidia_pkg_query.stdout_lines }}"
+        nvidia_pkgs_since_version: "{{ nvidia_pkg_query.stdout_lines }}"
 
     - debug:
-        var: nvidia_pkgs_gteq535
+        var: nvidia_pkgs_since_version
 
     - name: Install NVIDIA kernel items
       apt:
-        pkg: "{{ nvidia_pkgs_gteq535 + [
+        pkg: "{{ nvidia_pkgs_since_version + [
           'nvidia-settings',
           'nvidia-container-toolkit',
           'nvidia-container-runtime',
