@@ -60,6 +60,55 @@
     update_cache: no
   when: install
 
+- name: Pull all nvidia package for caching version >=535
+  block:
+    - name: NVIDIA-Packagelist - get >= 535
+      ansible.builtin.shell: |
+        set -o pipefail
+        apt-cache pkgnames | \
+        grep -E '^(nvidia-|libnvidia-|linux-modules-nvidia-|linux-objects-nvidia-|linux-signatures-nvidia-|xserver-xorg-video-)' | \
+        awk -F- '
+        /^linux-(modules|objects)-nvidia-/ {
+          if ($4 !~ /^[0-9]+$/ || $4 < 535) next
+          if ($0 ~ /-(generic|generic-64k)$/ || $0 ~ /-(generic-hwe-[0-9]+\.[0-9]+)$/) print
+          next
+        }
+
+        /^linux-signatures-nvidia-/ {
+          if ($0 ~ /-(generic|generic-64k)$/ || $0 ~ /-(generic-hwe-[0-9]+\.[0-9]+)$/) print
+          next
+        }
+
+        {
+          if ($NF ~ /^[0-9]+$/ && $NF >= 535) print
+        }'
+      args:
+        executable: /bin/bash
+      register: nvidia_pkg_query
+      changed_when: false
+
+    - name: NVIDIA-Packagelist - set variable
+      ansible.builtin.set_fact:
+        nvidia_pkgs_gteq535: "{{ nvidia_pkg_query.stdout_lines }}"
+
+    - debug:
+        var: nvidia_pkgs_gteq535
+
+    - name: Install NVIDIA kernel items
+      apt:
+        pkg: "{{ nvidia_pkgs_gteq535 + [
+          'nvidia-settings',
+          'nvidia-container-toolkit',
+          'nvidia-container-runtime',
+          'libnvidia-container-tools',
+          'libnvidia-container1'
+        ] }}"
+        install_recommends: yes
+        download_only: yes
+        update_cache: yes
+
+  when: caching
+
 - name: configure power management for nvidia
   copy:
     dest: /etc/default/grub.d/nvidia-power.cfg
