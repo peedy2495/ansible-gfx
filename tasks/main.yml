@@ -91,9 +91,6 @@
       ansible.builtin.set_fact:
         nvidia_pkgs_since_version: "{{ nvidia_pkg_query.stdout_lines }}"
 
-    - debug:
-        var: nvidia_pkgs_since_version
-
     - name: Download NVIDIA packages only
       ansible.builtin.shell: >
         apt-get install --download-only --yes
