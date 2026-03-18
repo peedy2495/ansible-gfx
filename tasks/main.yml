@@ -94,7 +94,8 @@
     - name: Clean apt cache and download NVIDIA packages only
       ansible.builtin.shell: |
         apt-get clean
-        apt-get install --download-only --yes "{{ item }}"
+        cd /var/cache/apt/archives
+        apt-get download "{{ item }}"
       args:
         executable: /bin/bash
       loop: "{{ nvidia_pkgs_since_version + [
