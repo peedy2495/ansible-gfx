@@ -91,18 +91,19 @@
       ansible.builtin.set_fact:
         nvidia_pkgs_since_version: "{{ nvidia_pkg_query.stdout_lines }}"
 
-    - name: Download NVIDIA packages only
-      ansible.builtin.shell: >
-        apt-get install --download-only --yes
-        {{ (nvidia_pkgs_since_version + [
-          'nvidia-settings',
-          'nvidia-container-toolkit',
-          'nvidia-container-runtime',
-          'libnvidia-container-tools',
-          'libnvidia-container1'
-        ]) | join(' ') }}
+    - name: Clean apt cache and download NVIDIA packages only
+      ansible.builtin.shell: |
+        apt-get clean
+        apt-get install --download-only --yes "{{ item }}"
       args:
         executable: /bin/bash
+      loop: "{{ nvidia_pkgs_since_version + [
+        'nvidia-settings',
+        'nvidia-container-toolkit',
+        'nvidia-container-runtime',
+        'libnvidia-container-tools',
+        'libnvidia-container1'
+      ] }}"
   when: caching
 
 - name: configure power management for nvidia
