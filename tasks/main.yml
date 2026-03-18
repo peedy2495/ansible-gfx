@@ -94,19 +94,18 @@
     - debug:
         var: nvidia_pkgs_since_version
 
-    - name: Install NVIDIA kernel items
-      apt:
-        pkg: "{{ nvidia_pkgs_since_version + [
+    - name: Download NVIDIA packages only
+      ansible.builtin.shell: >
+        apt-get install --download-only --yes
+        {{ (nvidia_pkgs_since_version + [
           'nvidia-settings',
           'nvidia-container-toolkit',
           'nvidia-container-runtime',
           'libnvidia-container-tools',
           'libnvidia-container1'
-        ] }}"
-        install_recommends: yes
-        download_only: yes
-        update_cache: yes
-
+        ]) | join(' ') }}
+      args:
+        executable: /bin/bash
   when: caching
 
 - name: configure power management for nvidia
