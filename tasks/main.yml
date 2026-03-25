@@ -99,11 +99,7 @@
       args:
         executable: /bin/bash
       loop: "{{ nvidia_pkgs_since_version + [
-        'nvidia-settings',
-        'nvidia-container-toolkit',
-        'nvidia-container-runtime',
-        'libnvidia-container-tools',
-        'libnvidia-container1'
+        'nvidia-settings'
       ] }}"
   when: caching
 
